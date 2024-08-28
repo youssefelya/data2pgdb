@@ -1,9 +1,6 @@
 import { ExcelToDB } from "../../src";
 import * as xlsx from "xlsx";
-import {
-  DatabaseFactory,
-  DatabaseConfig,
-} from "../../src/database/database-factory";
+import { DatabaseFactory } from "../../src/database/database-factory";
 import { Database } from "../../src/database/database";
 
 // Mock the DatabaseFactory to return a mocked Database instance
@@ -33,14 +30,11 @@ describe("ExcelToDB", () => {
 
     (DatabaseFactory.createDatabase as jest.Mock).mockReturnValue(mockDb);
 
-    const dbConfig: DatabaseConfig = {
-      type: "postgres", // or 'sqlserver'
-      config: {
-        host: "localhost",
-        user: "sa",
-        password: "password123",
-        port: 5432,
-      },
+    const dbConfig = {
+      host: "localhost",
+      user: "sa",
+      password: "password123",
+      port: 5432,
     };
 
     excelToDB = new ExcelToDB(dbConfig);
@@ -62,7 +56,7 @@ describe("ExcelToDB", () => {
     } as xlsx.WorkBook);
     (xlsx.utils.sheet_to_json as jest.Mock).mockReturnValue(mockSheetData);
 
-    await excelToDB.uploadExcel("fakepath.xlsx", "test_table", []);
+    await excelToDB.uploadExcelFile("fakepath.xlsx", "test_table", []);
 
     expect(mockDb.connect).toHaveBeenCalled();
     expect(mockDb.insertData).toHaveBeenCalledWith(
@@ -84,7 +78,7 @@ describe("ExcelToDB", () => {
     } as xlsx.WorkBook);
     (xlsx.utils.sheet_to_json as jest.Mock).mockReturnValue(mockSheetData);
 
-    await excelToDB.uploadExcel("fakepath.xlsx", "test_table", [
+    await excelToDB.uploadExcelFile("fakepath.xlsx", "test_table", [
       "Column1",
       "Column2",
     ]);
@@ -102,7 +96,7 @@ describe("ExcelToDB", () => {
     });
 
     await expect(
-      excelToDB.uploadExcel("fakepath.xlsx", "test_table")
+      excelToDB.uploadExcelFile("fakepath.xlsx", "test_table")
     ).rejects.toThrow("Error reading file");
 
     expect(mockDb.connect).toHaveBeenCalled();

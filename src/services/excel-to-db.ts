@@ -1,11 +1,12 @@
 import * as xlsx from "xlsx";
-import { DatabaseFactory, DatabaseConfig } from "../database/database-factory";
+import { DatabaseFactory } from "../database/database-factory";
 import { Database } from "../database/database";
+import { ClientConfig } from "pg";
 
 export class ExcelToDB {
   private db: Database;
 
-  constructor(dbConfig: DatabaseConfig) {
+  constructor(dbConfig: string | ClientConfig) {
     this.db = DatabaseFactory.createDatabase(dbConfig);
   }
 

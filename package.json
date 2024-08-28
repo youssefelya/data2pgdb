@@ -1,7 +1,4 @@
 {
-  "name": "data2db",
-  "version": "1.0.3",
-  "main": "index.js",
   "scripts": {
     "build": "tsc",
     "test": "jest",
@@ -11,13 +8,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "test:watch": "jest --watch"
   },
-  "keywords": [],
-  "author": "Youssef EL Yamani",
-  "license": "ISC",
-  "description": "data2db  is a lightweight and flexible library designed to facilitate the process of reading data from Excel, CSV, or JSON files and inserting it into your database. Whether you’re dealing with complex data migration tasks or simply need to import data into your SQL Server or PostgreSQL database, data-importer streamlines the entire process with minimal configuration.",
   "dependencies": {
-    "mssql": "^11.0.1",
-    "mysql2": "^3.11.0",
     "pg": "^8.12.0",
     "xlsx": "^0.18.5"
   },
@@ -31,13 +22,5 @@
   },
   "directories": {
     "test": "tests"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/youssefelya/data2db.git"
-  },
-  "bugs": {
-    "url": "https://github.com/youssefelya/data2db/issues"
-  },
-  "homepage": "https://github.com/youssefelya/data2db#readme"
+  }
 }

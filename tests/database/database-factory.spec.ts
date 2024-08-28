@@ -1,68 +1,50 @@
-import {
-  DatabaseFactory,
-  DatabaseConfig,
-} from "../../src/database/database-factory";
+import { DatabaseFactory } from "../../src/database/database-factory";
 import { PostgresDatabase } from "../../src/database/postgres-database";
-import { SqlServerDatabase } from "../../src/database/sqlserver-database";
 
 import { ClientConfig } from "pg";
-import { config } from "mssql";
 
 // Mock the database classes
 jest.mock("../../src/database/postgres-database");
-jest.mock("../../src/database/sqlserver-database");
 
 describe("DatabaseFactory", () => {
-  const postgresConfig: ClientConfig = {
+  const config: ClientConfig = {
+    user: "test",
     host: "localhost",
-    user: "postgresUser",
-    password: "password123",
     database: "testdb",
+    password: "password",
+    port: 5432,
   };
 
-  const sqlServerConfig: config = {
-    user: "sqlserverUser",
-    password: "password123",
-    server: "localhost",
-    database: "testdb",
-  };
-
-  afterEach(() => {
+  beforeEach(() => {
+    // Reset the singleton instance before each test
+    (DatabaseFactory as any).instance = null;
     jest.clearAllMocks();
   });
 
-  it('should create a PostgresDatabase instance when type is "postgres"', () => {
-    const dbConfig: DatabaseConfig = {
-      type: "postgres",
-      config: postgresConfig,
-    };
+  it("should create a new PostgresDatabase instance when one does not exist", () => {
+    const dbInstance = DatabaseFactory.createDatabase(config);
 
-    const dbInstance = DatabaseFactory.createDatabase(dbConfig);
-
-    expect(PostgresDatabase).toHaveBeenCalledWith(postgresConfig);
+    expect(PostgresDatabase).toHaveBeenCalledTimes(1);
+    expect(PostgresDatabase).toHaveBeenCalledWith(config);
     expect(dbInstance).toBeInstanceOf(PostgresDatabase);
   });
 
-  it('should create a SqlServerDatabase instance when type is "sqlserver"', () => {
-    const dbConfig: DatabaseConfig = {
-      type: "sqlserver",
-      config: sqlServerConfig,
-    };
+  it("should return the existing instance on subsequent calls", () => {
+    const dbInstance1 = DatabaseFactory.createDatabase(config);
+    const dbInstance2 = DatabaseFactory.createDatabase(config);
 
-    const dbInstance = DatabaseFactory.createDatabase(dbConfig);
-
-    expect(SqlServerDatabase).toHaveBeenCalledWith(sqlServerConfig);
-    expect(dbInstance).toBeInstanceOf(SqlServerDatabase);
+    expect(PostgresDatabase).toHaveBeenCalledTimes(1);
+    expect(dbInstance1).toBe(dbInstance2); // Should be the same instance
   });
 
-  it("should throw an error for unsupported database type", () => {
-    const dbConfig = {
-      type: "unsupported" as "postgres", // Type casting to bypass TypeScript checks
-      config: {},
-    };
+  it("should throw an error if the PostgresDatabase instance creation fails", () => {
+    // Mock PostgresDatabase to throw an error
+    (PostgresDatabase as jest.Mock).mockImplementation(() => {
+      throw new Error("Failed to create database");
+    });
 
-    expect(() => DatabaseFactory.createDatabase(dbConfig)).toThrow(
-      "Unsupported database type: unsupported"
+    expect(() => DatabaseFactory.createDatabase(config)).toThrow(
+      `Failed to create database`
     );
   });
 });

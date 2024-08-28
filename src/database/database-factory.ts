@@ -1,29 +1,21 @@
 import { Database } from "./database";
 import { PostgresDatabase } from "./postgres-database";
 import { ClientConfig } from "pg";
-import { config } from "mssql";
-import { SqlServerDatabase } from "./sqlserver-database";
-
-export interface DatabaseConfig {
-  type: "postgres" | "sqlserver";
-  config: string | ClientConfig | config;
-}
 
 export class DatabaseFactory {
-  private static readonly databaseMap: {
-    [key in DatabaseConfig["type"]]: (config: any) => Database;
-  } = {
-    postgres: (config) => new PostgresDatabase(config as string | ClientConfig),
-    sqlserver: (config) => new SqlServerDatabase(config as string | config),
-  };
+  private static instance: Database | null = null;
 
-  static createDatabase(dbConfig: DatabaseConfig): Database {
-    const createDatabase = this.databaseMap[dbConfig.type];
+  private constructor() {}
 
-    if (!createDatabase) {
-      throw new Error(`Unsupported database type: ${dbConfig.type}`);
+  static createDatabase(config: string | ClientConfig): Database {
+    if (!DatabaseFactory.instance) {
+      DatabaseFactory.instance = new PostgresDatabase(config);
+
+      if (!DatabaseFactory.instance) {
+        throw new Error(`Unsupported database ${config}`);
+      }
     }
 
-    return createDatabase(dbConfig.config);
+    return DatabaseFactory.instance;
   }
 }

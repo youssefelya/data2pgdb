@@ -1,0 +1,13 @@
+tests
+.vscode
+dist
+coverage
+./jest.config.ts
+
+
+tests/
+src/   
+.gitignore
+.npmignore
+jest.config.js
+tsconfig.json

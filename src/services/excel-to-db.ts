@@ -2,6 +2,7 @@ import * as xlsx from "xlsx";
 import { DatabaseFactory } from "../database/database-factory";
 import { Database } from "../database/database";
 import { ClientConfig } from "pg";
+import { ExcelUploadOptions } from "../utils/types";
 
 export class ExcelToDB {
   private db: Database;
@@ -10,11 +11,11 @@ export class ExcelToDB {
     this.db = DatabaseFactory.createDatabase(dbConfig);
   }
 
-  public async uploadExcelFile(
-    filePath: string,
-    tableName: string,
-    selectedColumns: string[] = []
-  ): Promise<void> {
+  public async uploadExcelFile({
+    filePath,
+    tableName,
+    selectedColumns = [],
+  }: ExcelUploadOptions): Promise<void> {
     try {
       const rowsToInsert: string[] = [];
       const columnNames: string[] = [];

@@ -2,8 +2,11 @@ import * as xlsx from "xlsx";
 import { DatabaseFactory } from "../database/database-factory";
 import { Database } from "../database/database";
 import { ClientConfig } from "pg";
-import { ExcelUploadOptions } from "../utils/types";
 
+/**
+ * @deprecated This class is deprecated and will be removed in a future release.
+ * Please use the `DataImporter` class instead, which supports multiple file formats including Excel and CSV.
+ */
 export class ExcelToDB {
   private db: Database;
 
@@ -11,11 +14,15 @@ export class ExcelToDB {
     this.db = DatabaseFactory.createDatabase(dbConfig);
   }
 
-  public async uploadExcelFile({
-    filePath,
-    tableName,
-    selectedColumns = [],
-  }: ExcelUploadOptions): Promise<void> {
+  /**
+   * @deprecated This method is deprecated and will be removed in a future release.
+   * Please use `DataImporter.uploadExcelFile` instead.
+   */
+  public async uploadExcelFile(
+    filePath: string,
+    tableName: string,
+    selectedColumns: string[] = []
+  ): Promise<void> {
     try {
       const rowsToInsert: string[] = [];
       const columnNames: string[] = [];

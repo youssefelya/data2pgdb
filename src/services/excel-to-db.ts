@@ -3,6 +3,10 @@ import { DatabaseFactory } from "../database/database-factory";
 import { Database } from "../database/database";
 import { ClientConfig } from "pg";
 
+/**
+ * @deprecated This class is deprecated and will be removed in a future release.
+ * Please use the `DataImporter` class instead, which supports multiple file formats including Excel and CSV.
+ */
 export class ExcelToDB {
   private db: Database;
 
@@ -10,6 +14,10 @@ export class ExcelToDB {
     this.db = DatabaseFactory.createDatabase(dbConfig);
   }
 
+  /**
+   * @deprecated This method is deprecated and will be removed in a future release.
+   * Please use `DataImporter.uploadExcelFile` instead.
+   */
   public async uploadExcelFile(
     filePath: string,
     tableName: string,

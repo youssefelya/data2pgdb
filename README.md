@@ -1,5 +1,5 @@
 
-```markdown
+
 # data2pgdb
 
 `data2pgdb` is a powerful utility designed to simplify the process of uploading data from various file formats (Excel, CSV, and more) directly into your PostgreSQL database. With minimal setup, you can map columns from these files to database fields and insert the data efficiently. This tool is ideal for developers and data professionals who need a straightforward solution for data migration or regular data imports.
